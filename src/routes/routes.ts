@@ -17,20 +17,6 @@ const multer = require('multer');
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
 const models: TsoaRoute.Models = {
-    "Usuario": {
-        "dataType": "refObject",
-        "properties": {
-            "id": {"dataType":"double","required":true},
-            "nome": {"dataType":"string","default":""},
-            "email": {"dataType":"string","default":""},
-            "senha": {"dataType":"string","default":""},
-            "race": {"dataType":"string","default":""},
-            "portadorAneis": {"dataType":"union","subSchemas":[{"dataType":"array","array":{"dataType":"refObject","ref":"Anel"}},{"dataType":"undefined"}],"required":true},
-            "forjadoPorAneis": {"dataType":"union","subSchemas":[{"dataType":"array","array":{"dataType":"refObject","ref":"Anel"}},{"dataType":"undefined"}],"required":true},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Anel": {
         "dataType": "refObject",
         "properties": {
@@ -39,8 +25,36 @@ const models: TsoaRoute.Models = {
             "poder": {"dataType":"string","default":""},
             "imagem": {"dataType":"string","default":""},
             "descricao": {"dataType":"string","default":""},
+            "historico": {"dataType":"array","array":{"dataType":"refObject","ref":"Historico"},"required":true},
             "portador": {"ref":"Usuario","required":true},
             "forjadoPor": {"ref":"Usuario","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Usuario": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "nome": {"dataType":"string","default":""},
+            "email": {"dataType":"string","default":""},
+            "senha": {"dataType":"string","default":""},
+            "race": {"dataType":"string","default":""},
+            "historico": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"default":null},
+            "portadorAneis": {"dataType":"union","subSchemas":[{"dataType":"array","array":{"dataType":"refObject","ref":"Anel"}},{"dataType":"undefined"}],"required":true},
+            "forjadoPorAneis": {"dataType":"union","subSchemas":[{"dataType":"array","array":{"dataType":"refObject","ref":"Anel"}},{"dataType":"undefined"}],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Historico": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "anel": {"ref":"Anel"},
+            "usuario": {"ref":"Usuario","required":true},
+            "action": {"dataType":"string","default":""},
+            "date": {"dataType":"datetime","required":true},
         },
         "additionalProperties": false,
     },
@@ -87,7 +101,7 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Partial_Usuario_": {
         "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"id":{"dataType":"double"},"nome":{"dataType":"string","default":""},"email":{"dataType":"string","default":""},"senha":{"dataType":"string","default":""},"race":{"dataType":"string","default":""},"portadorAneis":{"dataType":"array","array":{"dataType":"refObject","ref":"Anel"}},"forjadoPorAneis":{"dataType":"array","array":{"dataType":"refObject","ref":"Anel"}}},"validators":{}},
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"id":{"dataType":"double"},"nome":{"dataType":"string","default":""},"email":{"dataType":"string","default":""},"senha":{"dataType":"string","default":""},"race":{"dataType":"string","default":""},"historico":{"dataType":"string","default":null},"portadorAneis":{"dataType":"array","array":{"dataType":"refObject","ref":"Anel"}},"forjadoPorAneis":{"dataType":"array","array":{"dataType":"refObject","ref":"Anel"}}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "GeneralResponse__token_63_-string--user_63_-Partial_Usuario_--message_63_-string__": {
@@ -150,12 +164,12 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "GeneralResponse_number-or-_message-string__": {
+    "GeneralResponse__ringId-number--imageName-string_-or-_message-string__": {
         "dataType": "refObject",
         "properties": {
             "success": {"dataType":"boolean","required":true},
             "status": {"dataType":"string","required":true},
-            "data": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"nestedObjectLiteral","nestedProperties":{"message":{"dataType":"string","required":true}}}]},
+            "data": {"dataType":"union","subSchemas":[{"dataType":"nestedObjectLiteral","nestedProperties":{"imageName":{"dataType":"string","required":true},"ringId":{"dataType":"double","required":true}}},{"dataType":"nestedObjectLiteral","nestedProperties":{"message":{"dataType":"string","required":true}}}]},
         },
         "additionalProperties": false,
     },
@@ -412,15 +426,14 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.put('/api/aneis/:id',
+        app.put('/api/aneis',
             authenticateMiddleware([{"BearerAuth":[]}]),
             ...(fetchMiddlewares<RequestHandler>(AnelController)),
             ...(fetchMiddlewares<RequestHandler>(AnelController.prototype.atualizarAnel)),
 
             async function AnelController_atualizarAnel(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
-                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
-                    body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"imagem":{"dataType":"string"},"forjadoPorId":{"dataType":"double"},"portadorId":{"dataType":"double"},"descricao":{"dataType":"string"},"poder":{"dataType":"string"},"nome":{"dataType":"string"}}},
+                    body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"created":{"dataType":"boolean"},"imagem":{"dataType":"string"},"forjadoPorId":{"dataType":"double"},"portadorId":{"dataType":"double"},"descricao":{"dataType":"string"},"poder":{"dataType":"string"},"nome":{"dataType":"string"},"id":{"dataType":"double","required":true}}},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -444,7 +457,39 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.post('/api/aneis/upload-image',
+        app.patch('/api/aneis/roubarAnel/:id',
+            authenticateMiddleware([{"BearerAuth":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(AnelController)),
+            ...(fetchMiddlewares<RequestHandler>(AnelController.prototype.roubarAnel)),
+
+            async function AnelController_roubarAnel(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
+                    body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"portadorId":{"dataType":"double"}}},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new AnelController();
+
+              await templateService.apiHandler({
+                methodName: 'roubarAnel',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.post('/api/aneis/upload-image/:id',
             authenticateMiddleware([{"BearerAuth":[]}]),
             upload.fields([{"name":"file","maxCount":1,"multiple":false}]),
             ...(fetchMiddlewares<RequestHandler>(AnelController)),
@@ -453,6 +498,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
             async function AnelController_uploadImage(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
                     file: {"in":"formData","name":"file","required":true,"dataType":"file"},
+                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -465,6 +511,39 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
 
               await templateService.apiHandler({
                 methodName: 'uploadImage',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.post('/api/aneis/edit-image/:id',
+            authenticateMiddleware([{"BearerAuth":[]}]),
+            upload.fields([{"name":"file","maxCount":1,"multiple":false}]),
+            ...(fetchMiddlewares<RequestHandler>(AnelController)),
+            ...(fetchMiddlewares<RequestHandler>(AnelController.prototype.updateImage)),
+
+            async function AnelController_updateImage(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
+                    file: {"in":"formData","name":"file","required":true,"dataType":"file"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new AnelController();
+
+              await templateService.apiHandler({
+                methodName: 'updateImage',
                 controller,
                 response,
                 next,

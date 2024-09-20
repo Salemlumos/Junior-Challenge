@@ -90,3 +90,12 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+/* my Custom css */
+.vignette {
+  background: radial-gradient(
+    circle,
+    rgba(0, 0, 0, 0) 30%,
+    rgba(0, 0, 0, 0.7) 100%
+  );
+}

@@ -9,6 +9,7 @@ export const LogoutBtn = ()=>{
     const [message,setMessage]= useState<string>('Você tem certeza que quer sair da forja?')
     const [onYes,setOnYes]= useState<Function>()
     const router = useRouter();
+
     const Logout = ()=>{
 
         const onYesHandle =()=>{
@@ -16,8 +17,8 @@ export const LogoutBtn = ()=>{
             localStorage.removeItem('USER_INFO');
             router.replace("/")
         }
+        
         setOnYes(onYesHandle)
-        setOpen(true)
 
        
     }

@@ -7,47 +7,6 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
-			"Usuario": {
-				"properties": {
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"nome": {
-						"type": "string",
-						"default": ""
-					},
-					"email": {
-						"type": "string",
-						"default": ""
-					},
-					"senha": {
-						"type": "string",
-						"default": ""
-					},
-					"race": {
-						"type": "string",
-						"default": ""
-					},
-					"portadorAneis": {
-						"items": {
-							"$ref": "#/components/schemas/Anel"
-						},
-						"type": "array"
-					},
-					"forjadoPorAneis": {
-						"items": {
-							"$ref": "#/components/schemas/Anel"
-						},
-						"type": "array"
-					}
-				},
-				"required": [
-					"id"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
 			"Anel": {
 				"properties": {
 					"id": {
@@ -70,6 +29,12 @@
 						"type": "string",
 						"default": ""
 					},
+					"historico": {
+						"items": {
+							"$ref": "#/components/schemas/Historico"
+						},
+						"type": "array"
+					},
 					"portador": {
 						"$ref": "#/components/schemas/Usuario"
 					},
@@ -79,8 +44,84 @@
 				},
 				"required": [
 					"id",
+					"historico",
 					"portador",
 					"forjadoPor"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Usuario": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"nome": {
+						"type": "string",
+						"default": ""
+					},
+					"email": {
+						"type": "string",
+						"default": ""
+					},
+					"senha": {
+						"type": "string",
+						"default": ""
+					},
+					"race": {
+						"type": "string",
+						"default": ""
+					},
+					"historico": {
+						"type": "string",
+						"nullable": true,
+						"default": null
+					},
+					"portadorAneis": {
+						"items": {
+							"$ref": "#/components/schemas/Anel"
+						},
+						"type": "array"
+					},
+					"forjadoPorAneis": {
+						"items": {
+							"$ref": "#/components/schemas/Anel"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"id"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Historico": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"anel": {
+						"$ref": "#/components/schemas/Anel"
+					},
+					"usuario": {
+						"$ref": "#/components/schemas/Usuario"
+					},
+					"action": {
+						"type": "string",
+						"default": ""
+					},
+					"date": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"id",
+					"usuario",
+					"date"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -208,6 +249,10 @@
 					"race": {
 						"type": "string",
 						"default": ""
+					},
+					"historico": {
+						"type": "string",
+						"default": null
 					},
 					"portadorAneis": {
 						"items": {
@@ -398,7 +443,7 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"GeneralResponse_number-or-_message-string__": {
+			"GeneralResponse__ringId-number--imageName-string_-or-_message-string__": {
 				"properties": {
 					"success": {
 						"type": "boolean"
@@ -409,8 +454,20 @@
 					"data": {
 						"anyOf": [
 							{
-								"type": "number",
-								"format": "double"
+								"properties": {
+									"imageName": {
+										"type": "string"
+									},
+									"ringId": {
+										"type": "number",
+										"format": "double"
+									}
+								},
+								"required": [
+									"imageName",
+									"ringId"
+								],
+								"type": "object"
 							},
 							{
 								"properties": {
@@ -541,7 +598,7 @@
 						}
 					},
 					"201": {
-						"description": "User created successfully",
+						"description": "Usuário criado com sucesso",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -554,7 +611,7 @@
 						}
 					},
 					"400": {
-						"description": "Error creating user",
+						"description": "Error ao criar usuário",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -619,7 +676,7 @@
 						}
 					},
 					"404": {
-						"description": "User not found",
+						"description": "Usuário não encontrado",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -668,7 +725,7 @@
 						}
 					},
 					"400": {
-						"description": "Invalid email or password",
+						"description": "Email ou senha inválidos, por favor verifique suas credenciais.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -775,7 +832,7 @@
 						}
 					},
 					"201": {
-						"description": "Ring created successfully",
+						"description": "Anel criado com sucesso",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -788,7 +845,7 @@
 						}
 					},
 					"400": {
-						"description": "Validation Error",
+						"description": "Erro de validação",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -863,6 +920,111 @@
 						}
 					}
 				}
+			},
+			"put": {
+				"operationId": "AtualizarAnel",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GeneralResponse_Anel-or-_message-string__"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro de validação",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GeneralResponse__message-string__"
+								},
+								"examples": {
+									"Example 1": {}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Anel não encontrado",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GeneralResponse__message-string__"
+								},
+								"examples": {
+									"Example 1": {}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GeneralResponse__message-string__"
+								},
+								"examples": {
+									"Example 1": {}
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Anéis"
+				],
+				"security": [
+					{
+						"BearerAuth": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"created": {
+										"type": "boolean"
+									},
+									"imagem": {
+										"type": "string"
+									},
+									"forjadoPorId": {
+										"type": "number",
+										"format": "double"
+									},
+									"portadorId": {
+										"type": "number",
+										"format": "double"
+									},
+									"descricao": {
+										"type": "string"
+									},
+									"poder": {
+										"type": "string"
+									},
+									"nome": {
+										"type": "string"
+									},
+									"id": {
+										"type": "number",
+										"format": "double"
+									}
+								},
+								"required": [
+									"id"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
 			}
 		},
 		"/api/aneis/{id}": {
@@ -880,7 +1042,7 @@
 						}
 					},
 					"404": {
-						"description": "Ring not found",
+						"description": "Anel não encontrado",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -926,8 +1088,70 @@
 					}
 				]
 			},
-			"put": {
-				"operationId": "AtualizarAnel",
+			"delete": {
+				"operationId": "DeletarAnel",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GeneralResponse_null-or-_message-string__"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Anel não encontrado",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GeneralResponse__message-string__"
+								},
+								"examples": {
+									"Example 1": {}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GeneralResponse__message-string__"
+								},
+								"examples": {
+									"Example 1": {}
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Anéis"
+				],
+				"security": [
+					{
+						"BearerAuth": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/api/aneis/roubarAnel/{id}": {
+			"patch": {
+				"operationId": "RoubarAnel",
 				"responses": {
 					"200": {
 						"description": "Ok",
@@ -940,7 +1164,7 @@
 						}
 					},
 					"400": {
-						"description": "Validation Error",
+						"description": "Erro de validação",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -953,7 +1177,7 @@
 						}
 					},
 					"404": {
-						"description": "Ring not found",
+						"description": "Anel não encontrado",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -1004,25 +1228,9 @@
 						"application/json": {
 							"schema": {
 								"properties": {
-									"imagem": {
-										"type": "string"
-									},
-									"forjadoPorId": {
-										"type": "number",
-										"format": "double"
-									},
 									"portadorId": {
 										"type": "number",
 										"format": "double"
-									},
-									"descricao": {
-										"type": "string"
-									},
-									"poder": {
-										"type": "string"
-									},
-									"nome": {
-										"type": "string"
 									}
 								},
 								"type": "object"
@@ -1030,22 +1238,24 @@
 						}
 					}
 				}
-			},
-			"delete": {
-				"operationId": "DeletarAnel",
+			}
+		},
+		"/api/aneis/upload-image/{id}": {
+			"post": {
+				"operationId": "UploadImage",
 				"responses": {
 					"200": {
 						"description": "Ok",
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/GeneralResponse_null-or-_message-string__"
+									"$ref": "#/components/schemas/GeneralResponse__ringId-number--imageName-string_-or-_message-string__"
 								}
 							}
 						}
 					},
-					"404": {
-						"description": "Ring not found",
+					"400": {
+						"description": "Erro de validação",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -1089,25 +1299,57 @@
 							"type": "number"
 						}
 					}
-				]
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"multipart/form-data": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"file": {
+										"type": "string",
+										"format": "binary"
+									}
+								},
+								"required": [
+									"file"
+								]
+							}
+						}
+					}
+				}
 			}
 		},
-		"/api/aneis/upload-image": {
+		"/api/aneis/edit-image/{id}": {
 			"post": {
-				"operationId": "UploadImage",
+				"operationId": "UpdateImage",
 				"responses": {
 					"200": {
 						"description": "Ok",
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/GeneralResponse_number-or-_message-string__"
+									"$ref": "#/components/schemas/GeneralResponse__ringId-number--imageName-string_-or-_message-string__"
 								}
 							}
 						}
 					},
 					"400": {
-						"description": "Validation Error",
+						"description": "Erro de validação",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GeneralResponse__message-string__"
+								},
+								"examples": {
+									"Example 1": {}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Anel não encontrado",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -1141,7 +1383,17 @@
 						"BearerAuth": []
 					}
 				],
-				"parameters": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
 				"requestBody": {
 					"required": true,
 					"content": {

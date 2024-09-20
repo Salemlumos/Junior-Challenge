@@ -28,11 +28,12 @@ const SauronEye: React.FC = () => {
       className="relative w-full h-full flex justify-center items-center"
       onMouseMove={handleMouseMove}
     >
+    {/* saurons eye was removed duo lack of time to do the best fucking logo  */}
       <motion.img
-        src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/1dbc1935-6542-4ee3-822f-135cff4ba62c/dhc732x-14085f84-b359-4ec3-8741-e88136db15b7.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzFkYmMxOTM1LTY1NDItNGVlMy04MjJmLTEzNWNmZjRiYTYyY1wvZGhjNzMyeC0xNDA4NWY4NC1iMzU5LTRlYzMtODc0MS1lODgxMzZkYjE1YjcucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.gFoL2_wV61J5Drl-xsu6JyN6EZQ0TDut2rb_J8ONKU8"
+        src="https://seeklogo.com/images/L/lord-of-the-rings-logo-CCAA419E2E-seeklogo.com.png"
         alt="Animated Image"
-        width={100}
-        height={100}
+        width={300}
+        height={300}
         style={{ 
           rotateX: rotateX,
           rotateY: rotateY,

@@ -79,7 +79,7 @@ export function LoginForm() {
     <>
     <Dialog state={{op:open,setOp:(state:boolean)=>{setOpen(state)},message:message}}/>
     <Form {...form}>
-    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 m-4">
       <div>
       <FormField
           control={form.control}
@@ -102,7 +102,7 @@ export function LoginForm() {
               <FormLabel>Senha</FormLabel>
 
               <FormControl>
-                <Input className='pl-9' placeholder="Digite sua senha..." type={isPasswordVisible?'text':'password'} {...field} />
+                <Input className='' placeholder="Digite sua senha..." type={isPasswordVisible?'text':'password'} {...field} />
               </FormControl>
              
               <FormMessage />
@@ -114,7 +114,7 @@ export function LoginForm() {
       <Button type="submit" className='w-full mt-2'>
         {loading ?(
           <>
-          <ReloadIcon className="mr-4  animate-spin" /> 
+          <ReloadIcon className="text-white mr-2 animate-spin" /> 
           <span>
             {" "}Carregando
             </span>

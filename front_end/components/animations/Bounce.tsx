@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 
 interface BounceWrapperProps {
   children: ReactNode;
-  className:string;
+  className?:string;
 }
 
 export const BounceWrapper = ({ children,className }: BounceWrapperProps) => {
